@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hospital Management System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f6f8;
+            color: #333;
+        }
+
+        header {
+            background: #087f8c;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        header h1 {
+            margin-bottom: 8px;
+        }
+
+        nav {
+            background: #055c66;
+            padding: 15px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #b9f3f8;
+        }
+
+        section {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #ccc;
+        }
+
+        h2 {
+            color: #087f8c;
+            margin-bottom: 20px;
+        }
+
+        /* Dashboard */
+        .cards {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            flex: 1;
+            min-width: 200px;
+            background: #e1f5f7;
+            padding: 25px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .card h3 {
+            color: #055c66;
+        }
+
+        .card p {
+            font-size: 30px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* Forms */
+        form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        input,
+        select {
+            padding: 12px;
+            border: 1px solid #bbb;
+            border-radius: 5px;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        button {
+            background: #087f8c;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #055c66;
+        }
+
+        #searchPatient {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: #087f8c;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+
+        #appointmentMessage {
+            color: green;
+            font-weight: bold;
+        }
+
+        footer {
+            background: #055c66;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 600px) {
+
+            nav a {
+                display: block;
+                margin: 10px;
+            }
+
+            section {
+                width: 95%;
+            }
+
+            .cards {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1>Hospital Management System</h1>
+        <p>Welcome to City Care Hospital</p>
+    </header>
+
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#patients">Patients</a>
+        <a href="#doctors">Doctors</a>
+        <a href="#appointment">Appointments</a>
+    </nav>
+
+
+    <!-- Dashboard -->
+    <section id="dashboard">
+
+        <h2>Dashboard</h2>
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>Total Patients</h3>
+                <p id="patientCount">0</p>
+            </div>
+
+            <div class="card">
+                <h3>Total Doctors</h3>
+                <p>5</p>
+            </div>
+
+            <div class="card">
+                <h3>Appointments</h3>
+                <p id="appointmentCount">0</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Patient Management -->
+    <section id="patients">
+
+        <h2>Patient Management</h2>
+
+        <input
+            type="text"
+            id="searchPatient"
+            placeholder="Search patient..."
+            onkeyup="searchPatient()"
+        >
+
+        <form id="patientForm">
+
+            <input
+                type="text"
+                id="patientName"
+                placeholder="Patient Name"
+                required
+            >
+
+            <input
+                type="number"
+                id="patientAge"
+                placeholder="Age"
+                required
+            >
+
+            <select id="patientGender" required>
+
+                <option value="">Select Gender</option>
+                <option>Male</option>
+                <option>Female</option>
+
+            </select>
+
+            <input
+                type="text"
+                id="patientDisease"
+                placeholder="Disease"
+                required
+            >
+
+            <button type="submit">
+                Add Patient
+            </button>
+
+        </form>
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>Disease</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="patientTable">
+            </tbody>
+
+        </table>
+
+    </section>
+
+
+    <!-- Doctors -->
+    <section id="doctors">
+
+        <h2>Doctors</h2>
+
+        <table>
+
+            <tr>
+                <th>Doctor Name</th>
+                <th>Specialization</th>
+                <th>Available</th>
+            </tr>
+
+            <tr>
+                <td>Dr. Amit Patil</td>
+                <td>Cardiologist</td>
+                <td>Yes</td>
+            </tr>
+
+            <tr>
+                <td>Dr. Sneha Joshi</td>
+                <td>Dermatologist</td>
+                <td>Yes</td>
+            </tr>
+
+            <tr>
+                <td>Dr. Rahul Shah</td>
+                <td>Orthopedic</td>
+                <td>No</td>
+            </tr>
+
+            <tr>
+                <td>Dr. Priya More</td>
+                <td>Gynecologist</td>
+                <td>Yes</td>
+            </tr>
+
+        </table>
+
+    </section>
+
+
+    <!-- Appointment -->
+    <section id="appointment">
+
+        <h2>Book Appointment</h2>
+
+        <form id="appointmentForm">
+
+            <input
+                type="text"
+                id="appointmentPatient"
+                placeholder="Patient Name"
+                required
+            >
+
+            <select id="appointmentDoctor" required>
+
+                <option value="">Select Doctor</option>
+                <option>Dr. Amit Patil</option>
+                <option>Dr. Sneha Joshi</option>
+                <option>Dr. Rahul Shah</option>
+                <option>Dr. Priya More</option>
+
+            </select>
+
+            <input
+                type="date"
+                id="appointmentDate"
+                required
+            >
+
+            <button type="submit">
+                Book Appointment
+            </button>
+
+        </form>
+
+        <p id="appointmentMessage"></p>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <p>© 2026 City Care Hospital</p>
+
+    </footer>
+
+
+    <!-- JavaScript -->
+    <script>
+
+        let patients = [];
+        let appointments = 0;
+
+
+        // Add Patient
+        document
+            .getElementById("patientForm")
+            .addEventListener("submit", function(event) {
+
+                event.preventDefault();
+
+                let name =
+                    document.getElementById("patientName").value;
+
+                let age =
+                    document.getElementById("patientAge").value;
+
+                let gender =
+                    document.getElementById("patientGender").value;
+
+                let disease =
+                    document.getElementById("patientDisease").value;
+
+
+                let patient = {
+                    name: name,
+                    age: age,
+                    gender: gender,
+                    disease: disease
+                };
+
+
+                patients.push(patient);
+
+                displayPatients();
+
+                document
+                    .getElementById("patientForm")
+                    .reset();
+
+                document
+                    .getElementById("patientCount")
+                    .innerText = patients.length;
+
+            });
+
+
+        // Display Patients
+        function displayPatients() {
+
+            let table =
+                document.getElementById("patientTable");
+
+            table.innerHTML = "";
+
+
+            patients.forEach(function(patient) {
+
+                let row = `
+                    <tr>
+                        <td>${patient.name}</td>
+                        <td>${patient.age}</td>
+                        <td>${patient.gender}</td>
+                        <td>${patient.disease}</td>
+                    </tr>
+                `;
+
+                table.innerHTML += row;
+
+            });
+
+        }
+
+
+        // Search Patient
+        function searchPatient() {
+
+            let search =
+                document
+                    .getElementById("searchPatient")
+                    .value
+                    .toLowerCase();
+
+
+            let rows =
+                document
+                    .getElementById("patientTable")
+                    .getElementsByTagName("tr");
+
+
+            for (let i = 0; i < rows.length; i++) {
+
+                let name =
+                    rows[i]
+                        .getElementsByTagName("td")[0]
+                        .innerText
+                        .toLowerCase();
+
+
+                if (name.includes(search)) {
+
+                    rows[i].style.display = "";
+
+                } else {
+
+                    rows[i].style.display = "none";
+
+                }
+
+            }
+
+        }
+
+
+        // Book Appointment
+        document
+            .getElementById("appointmentForm")
+            .addEventListener("submit", function(event) {
+
+                event.preventDefault();
+
+
+                let patient =
+                    document.getElementById(
+                        "appointmentPatient"
+                    ).value;
+
+
+                let doctor =
+                    document.getElementById(
+                        "appointmentDoctor"
+                    ).value;
+
+
+                let date =
+                    document.getElementById(
+                        "appointmentDate"
+                    ).value;
+
+
+                appointments++;
+
+
+                document
+                    .getElementById("appointmentCount")
+                    .innerText = appointments;
+
+
+                document
+                    .getElementById("appointmentMessage")
+                    .innerText =
+                    "Appointment booked successfully for "
+                    + patient
+                    + " with "
+                    + doctor
+                    + " on "
+                    + date;
+
+
+                document
+                    .getElementById("appointmentForm")
+                    .reset();
+
+            });
+
+    </script>
+
+</body>
+</html>
